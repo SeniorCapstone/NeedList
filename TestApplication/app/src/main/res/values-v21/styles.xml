@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="test" parent="AppTheme">
+        <item name="colorPrimary">@android:color/holo_red_dark</item>
+        <item name="colorPrimaryDark">@color/darker_red</item>
+        <item name="colorAccent">@android:color/holo_orange_dark</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+</resources>
