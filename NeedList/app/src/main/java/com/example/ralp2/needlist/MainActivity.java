@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
         //List uploaded to Firebase Database
         //(will need to be modified so that lists will be unique to different users)
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("list:");
+        DatabaseReference myRef = database.getReference("list");
         myRef.setValue(items.toString());
 
     }
