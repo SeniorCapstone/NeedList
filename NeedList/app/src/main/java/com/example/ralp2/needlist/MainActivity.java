@@ -2,8 +2,10 @@ package com.example.ralp2.needlist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,6 +13,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -36,10 +48,12 @@ public class MainActivity extends Activity {
         itemsAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(itemsAdapter);
-        items.add("Hold to remove an item");
-        items.add("add -URGENT to send notifications");
+        items.add("To add an item, type the name and tap +");
+        items.add("To remove an item, hold the item");
         setupListViewListener();
     }
+
+
 
     public void onAddItem(View v) {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
@@ -49,7 +63,17 @@ public class MainActivity extends Activity {
         writeItems();
     }
 
-    public void onSubmit(View v) {
+    public void onUpdate(View v) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        //List uploaded to Firebase Database
+        //(will need to be modified so that lists will be unique to different users)
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("list");
+        myRef.setValue(items.toString());
+
+    }
+
+    public void onEmail(View v) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"rayalanlpalangan@lewisu.edu"});
@@ -60,11 +84,6 @@ public class MainActivity extends Activity {
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(MainActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }
-        //List uploaded to Firebase Database
-        //(will need to be modified so that lists will be unique to different users)
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("list");
-        myRef.setValue(items.toString());
 
     }
 
